@@ -11,7 +11,7 @@ export default function SignupForm() {
   }
   return (
     <div className="flex w-full items-center justify-center bg-white">
-      <div className="my-8 min-h-[460px] w-[432px] rounded-2xl border border-slate-200 px-8 pb-16 pt-8">
+      <div className="my-8 min-h-[460px] w-[432px] rounded-2xl border border-slate-200 px-8 pb-10 pt-8">
         <p className="text-center text-3xl font-bold">Create your account</p>
 
         <div className="nameDiv my-4 text-left">
