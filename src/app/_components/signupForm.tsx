@@ -2,7 +2,11 @@
 
 import { useRouter } from "next/navigation";
 
-export default function SignupForm() {
+type SignupFormProps = {
+  handleVerifyEmail: () => void;
+};
+
+export default function SignupForm({ handleVerifyEmail }: SignupFormProps) {
   const router = useRouter();
 
   function handleRouter(path: string) {
@@ -40,7 +44,10 @@ export default function SignupForm() {
           <span className="absolute right-4 top-2/4 cursor-pointer text-sm underline"></span>
         </div>
         <div className="loginDiv">
-          <button className="my-6 w-full rounded bg-black py-2 font-semibold text-white">
+          <button
+            className="my-6 w-full rounded bg-black py-2 font-semibold text-white"
+            onClick={() => handleVerifyEmail()}
+          >
             CREATE ACCOUNT
           </button>
         </div>
