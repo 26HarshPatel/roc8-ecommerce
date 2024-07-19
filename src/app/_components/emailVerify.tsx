@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, {
   type KeyboardEvent,
   type ChangeEvent,
@@ -9,12 +10,34 @@ import React, {
   useState,
 } from "react";
 
-const SignupEmailVerify: FC = () => {
+import { api } from "~/trpc/react";
+
+interface SignupEmailVerifyProps {
+  emailId: string;
+}
+
+interface UpdateObject {
+  id: number;
+  isEmailVerified: boolean;
+}
+
+const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
   const [code, setCode] = useState<string[]>(Array(8).fill(""));
-
   const inputRef = useRef<(HTMLInputElement | null)[]>([]);
+  const router = useRouter();
 
-  const emailId = "roc8-ecommerce@gmail.com";
+  const updateUserMutation = api.user.update.useMutation({
+    onSuccess: (data) => {
+      console.log("User updated successfully:", data);
+      // Handle successful response here
+    },
+    onError: (error) => {
+      console.error("Error updating user:", error);
+      // Handle error response here
+    },
+  });
+
+  // const emailId = "roc8-ecommerce@gmail.com";
 
   function handleInputChange(e: HTMLInputElement, index: number) {
     const { value } = e;
@@ -22,7 +45,7 @@ const SignupEmailVerify: FC = () => {
       setCode((prevValue) => {
         const newVal = [...prevValue];
         newVal[index] = value;
-        console.log("new value =", newVal);
+        // console.log("new value =", newVal);
         return newVal;
       });
       if (index < 7) {
@@ -55,14 +78,35 @@ const SignupEmailVerify: FC = () => {
     if (event.key === "Backspace") {
       if (index >= 0) {
         inputRef.current[index === 0 ? 0 : index - 1]?.focus();
-        console.log("index =", index);
+        // console.log("index =", index);
         setCode((prevVal) => {
           const newVal = [...prevVal];
           newVal[index] = "";
-          console.log("new value array =", newVal);
+          // console.log("new value array =", newVal);
           return newVal;
         });
       }
+    }
+  }
+
+  async function handleUpdateUser(updateObject: UpdateObject) {
+    updateUserMutation.mutate(updateObject);
+  }
+
+  async function handleVerifyEmail() {
+    let codeString = "";
+    code.forEach((el) => {
+      codeString += el;
+    });
+    if (codeString === "12345678") {
+      const updateObject = {
+        id: 2,
+        isEmailVerified: true,
+      };
+      await handleUpdateUser(updateObject);
+      router.push("/");
+    } else {
+      console.log("Invalid Code.");
     }
   }
 
@@ -111,7 +155,10 @@ const SignupEmailVerify: FC = () => {
           })}
         </div>
         <div className="loginDiv">
-          <button className="my-6 w-full rounded bg-black py-2 font-semibold text-white">
+          <button
+            className="my-6 w-full rounded bg-black py-2 font-semibold text-white"
+            onClick={handleVerifyEmail}
+          >
             VERIFY
           </button>
         </div>

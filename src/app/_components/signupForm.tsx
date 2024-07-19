@@ -1,17 +1,76 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { type ChangeEvent } from "react";
 
+import { api } from "~/trpc/react";
+
+interface UserData {
+  name: string;
+  email: string;
+  password: string;
+  isEmailVerified: boolean;
+}
 type SignupFormProps = {
   handleVerifyEmail: () => void;
+  userData: UserData;
+  setUserData: (e: UserData | ((prevVal: UserData) => UserData)) => void;
 };
 
-export default function SignupForm({ handleVerifyEmail }: SignupFormProps) {
+export default function SignupForm({
+  handleVerifyEmail,
+  userData,
+  setUserData,
+}: SignupFormProps) {
   const router = useRouter();
+  const createUserMutation = api.user.create.useMutation({
+    onSuccess: (data) => {
+      console.log("User created successfully:", data);
+      // Handle successful response here
+    },
+    onError: (error) => {
+      console.error("Error creating user:", error);
+      // Handle error response here
+    },
+  });
+  // const greeting = api.user.hello.useQuery();
+  // console.log("greeting = ", greeting.data);
+
+  async function handleCreateNewUser() {
+    return createUserMutation.mutate(userData);
+  }
+
+  function handleTypeValidateEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  function handleChangeUserValue(e: ChangeEvent<HTMLInputElement>) {
+    const name: string = e.target.name;
+    setUserData((prevVal: UserData) => {
+      return { ...prevVal, [name]: e.target.value };
+    });
+    // console.log("value =", e.target.value);
+  }
 
   function handleRouter(path: string) {
     const route = "/" + path;
     router.push(route);
+  }
+
+  async function handleCreateUser() {
+    const emailTypeVerified = handleTypeValidateEmail(userData.email);
+    if (emailTypeVerified) {
+      await handleCreateNewUser();
+      // const newUser = await handleCreateNewUser();
+
+      // console.log("new user =", newUser);
+      handleVerifyEmail();
+      // console.log("created user =", userData);
+      // console.log("creating user");
+    } else {
+      alert("Enter valid email.");
+    }
   }
   return (
     <div className="flex w-full items-center justify-center bg-white">
@@ -22,6 +81,9 @@ export default function SignupForm({ handleVerifyEmail }: SignupFormProps) {
           <label className="text-sm font-semibold">Name</label>
           <input
             type="text"
+            name="name"
+            value={userData.name}
+            onChange={handleChangeUserValue}
             className="w-full rounded border border-slate-200 px-3 py-2 text-sm"
             placeholder="Enter"
           />
@@ -30,6 +92,9 @@ export default function SignupForm({ handleVerifyEmail }: SignupFormProps) {
           <label className="text-sm font-semibold">Email</label>
           <input
             type="email"
+            name="email"
+            value={userData.email}
+            onChange={handleChangeUserValue}
             className="w-full rounded border border-slate-200 px-3 py-2 text-sm"
             placeholder="Enter"
           />
@@ -38,6 +103,9 @@ export default function SignupForm({ handleVerifyEmail }: SignupFormProps) {
           <label className="text-sm font-semibold">Password</label>
           <input
             type="password"
+            name="password"
+            value={userData.password}
+            onChange={handleChangeUserValue}
             className="w-full rounded border border-slate-200 px-3 py-2 text-sm"
             placeholder="Enter"
           />
@@ -46,7 +114,7 @@ export default function SignupForm({ handleVerifyEmail }: SignupFormProps) {
         <div className="loginDiv">
           <button
             className="my-6 w-full rounded bg-black py-2 font-semibold text-white"
-            onClick={() => handleVerifyEmail()}
+            onClick={() => handleCreateUser()}
           >
             CREATE ACCOUNT
           </button>

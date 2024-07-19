@@ -1,11 +1,38 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
+import { api } from "~/trpc/react";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [userLoginData, setUserLoginData] = useState({
+    email: "",
+    password: "",
+  });
   const router = useRouter();
+  const loginUserMutation = api.user.login.useMutation({
+    onSuccess: (data: boolean) => {
+      if (data) {
+        console.log("response = ", data);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ email: userLoginData.email }),
+        );
+        handleRouter("categories");
+      } else console.log("Invalid Login Details.");
+    },
+    onError: (error: unknown) => {
+      console.error("Error user password verification:", error);
+    },
+  });
+
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    const name = e.target.name;
+    setUserLoginData((prevVal) => {
+      return { ...prevVal, [name]: e.target.value };
+    });
+  }
 
   function handleRouter(path: string) {
     const route = "/" + path;
@@ -14,6 +41,15 @@ export default function Login() {
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
+  }
+
+  // async function handleVerifyUserPassword() {
+  //   loginUserMutation.mutate(userLoginData);
+  // }
+
+  async function handleLoginUser() {
+    // await handleVerifyUserPassword();
+    loginUserMutation.mutate(userLoginData);
   }
 
   return (
@@ -30,6 +66,9 @@ export default function Login() {
           <label className="text-sm font-semibold">Email</label>
           <input
             type="email"
+            name="email"
+            value={userLoginData.email}
+            onChange={handleInputChange}
             className="w-full rounded border border-slate-200 px-3 py-2 text-sm"
             placeholder="Enter"
           />
@@ -38,6 +77,9 @@ export default function Login() {
           <label className="text-sm font-semibold">Password</label>
           <input
             type={`${showPassword ? "text" : "password"}`}
+            name="password"
+            value={userLoginData.password}
+            onChange={handleInputChange}
             className="w-full rounded border border-slate-200 px-3 py-2 text-sm"
             placeholder="Enter"
           />
@@ -49,7 +91,10 @@ export default function Login() {
           </span>
         </div>
         <div className="loginDiv">
-          <button className="my-6 w-full rounded bg-black py-2 font-semibold text-white">
+          <button
+            className="my-6 w-full rounded bg-black py-2 font-semibold text-white"
+            onClick={handleLoginUser}
+          >
             LOGIN
           </button>
         </div>

@@ -6,6 +6,12 @@ import SignupEmailVerify from "../_components/emailVerify";
 
 export default function Signup() {
   const [verifyEmail, setVerifyEmail] = useState(false);
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    isEmailVerified: false,
+  });
 
   function handleVerifyEmail(): void {
     setVerifyEmail(!verifyEmail);
@@ -13,9 +19,13 @@ export default function Signup() {
   return (
     <div className="">
       {verifyEmail ? (
-        <SignupEmailVerify />
+        <SignupEmailVerify emailId={userData.email} />
       ) : (
-        <SignupForm handleVerifyEmail={handleVerifyEmail} />
+        <SignupForm
+          handleVerifyEmail={handleVerifyEmail}
+          userData={userData}
+          setUserData={setUserData}
+        />
       )}
     </div>
   );
