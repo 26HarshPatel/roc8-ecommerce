@@ -99,6 +99,7 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
       router.push("/");
     } else {
       console.log("Invalid Code.");
+      alert("Invalid code. Try with 12345678");
     }
   }
 
