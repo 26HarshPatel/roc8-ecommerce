@@ -62,9 +62,18 @@ export default function SignupForm({
       alert("Enter valid email.");
     }
   }
+
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    await handleCreateUser();
+  }
+
   return (
     <div className="flex w-full items-center justify-center bg-white">
-      <div className="my-8 min-h-[460px] w-[432px] rounded-2xl border border-slate-200 px-8 pb-10 pt-8">
+      <form
+        className="my-8 min-h-[460px] w-[432px] rounded-2xl border border-slate-200 px-8 pb-10 pt-8"
+        onSubmit={handleFormSubmit}
+      >
         <p className="text-center text-3xl font-bold">Create your account</p>
 
         <div className="nameDiv my-4 text-left">
@@ -120,7 +129,7 @@ export default function SignupForm({
             </span>
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

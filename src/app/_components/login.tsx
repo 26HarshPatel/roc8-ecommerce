@@ -47,9 +47,17 @@ export default function Login() {
     loginUserMutation.mutate(userLoginData);
   }
 
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    await handleLoginUser();
+  }
+
   return (
     <div className="flex w-full items-center justify-center bg-white">
-      <div className="my-8 h-[460px] w-[432px] rounded-2xl border border-slate-200 px-8 py-5">
+      <form
+        className="my-8 h-[460px] w-[432px] rounded-2xl border border-slate-200 px-8 py-5"
+        onSubmit={handleFormSubmit}
+      >
         <p className="text-center text-3xl font-bold">Login</p>
         <p className="mt-5 text-center font-semibold">
           Welcome back to ECOMMERCE
@@ -105,7 +113,7 @@ export default function Login() {
             </span>
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

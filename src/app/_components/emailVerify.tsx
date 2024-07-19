@@ -102,9 +102,17 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
     }
   }
 
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    await handleVerifyEmail();
+  }
+
   return (
     <div className="flex items-center justify-center">
-      <div className="my-6 rounded-lg border border-slate-200 px-10 py-6">
+      <form
+        className="my-6 rounded-lg border border-slate-200 px-10 py-6"
+        onSubmit={handleFormSubmit}
+      >
         <h2 className="my-5 text-center text-3xl font-semibold">
           Verify your email
         </h2>
@@ -154,7 +162,7 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
             VERIFY
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
