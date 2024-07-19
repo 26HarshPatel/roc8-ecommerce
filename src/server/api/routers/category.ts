@@ -30,7 +30,7 @@ export const categoryRouter = createTRPCRouter({
         skip: (input.page - 1) * input.limit,
         take: input.limit,
         orderBy: {
-          createdAt: "asc",
+          id: "asc",
         },
       });
       const responseData: PaginatedResponse[] = [];
