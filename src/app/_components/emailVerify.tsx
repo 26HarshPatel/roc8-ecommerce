@@ -29,15 +29,11 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
   const updateUserMutation = api.user.update.useMutation({
     onSuccess: (data) => {
       console.log("User updated successfully:", data);
-      // Handle successful response here
     },
     onError: (error) => {
       console.error("Error updating user:", error);
-      // Handle error response here
     },
   });
-
-  // const emailId = "roc8-ecommerce@gmail.com";
 
   function handleInputChange(e: HTMLInputElement, index: number) {
     const { value } = e;
@@ -45,7 +41,6 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
       setCode((prevValue) => {
         const newVal = [...prevValue];
         newVal[index] = value;
-        // console.log("new value =", newVal);
         return newVal;
       });
       if (index < 7) {
@@ -59,7 +54,6 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
 
   function handlePaste(event: ClipboardEvent<HTMLDivElement>) {
     const pasteStr = event.clipboardData.getData("text");
-    // const pasteArray = paste.split("");
     const newCode = [...code];
     const loopLength = Math.min(8, pasteStr.length);
 
@@ -78,11 +72,9 @@ const SignupEmailVerify: FC<SignupEmailVerifyProps> = ({ emailId }) => {
     if (event.key === "Backspace") {
       if (index >= 0) {
         inputRef.current[index === 0 ? 0 : index - 1]?.focus();
-        // console.log("index =", index);
         setCode((prevVal) => {
           const newVal = [...prevVal];
           newVal[index] = "";
-          // console.log("new value array =", newVal);
           return newVal;
         });
       }

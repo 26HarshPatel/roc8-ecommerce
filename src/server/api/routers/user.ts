@@ -95,8 +95,6 @@ export const userRouter = createTRPCRouter({
   update: publicProcedure
     .input(z.object({ id: z.number(), isEmailVerified: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       return ctx.db.user.update({
         where: {
           id: input.id,

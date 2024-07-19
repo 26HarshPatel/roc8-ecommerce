@@ -23,7 +23,6 @@ export const categoryRouter = createTRPCRouter({
       z.object({
         page: z.number(),
         limit: z.number(),
-        // getLength : z.boolean()
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -32,7 +31,6 @@ export const categoryRouter = createTRPCRouter({
         take: input.limit,
         orderBy: {
           createdAt: "asc",
-          //   createdAt: "desc",
         },
       });
       const responseData: PaginatedResponse[] = [];
@@ -42,10 +40,7 @@ export const categoryRouter = createTRPCRouter({
           name: el.name,
         });
       });
-      //  if (input.getLength) {
       const count = await ctx.db.category.count();
       return { category: responseData, count: Math.ceil(count / input.limit) };
-      //  }
-      // return responseData;
     }),
 });

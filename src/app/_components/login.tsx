@@ -43,12 +43,7 @@ export default function Login() {
     setShowPassword(!showPassword);
   }
 
-  // async function handleVerifyUserPassword() {
-  //   loginUserMutation.mutate(userLoginData);
-  // }
-
   async function handleLoginUser() {
-    // await handleVerifyUserPassword();
     loginUserMutation.mutate(userLoginData);
   }
 

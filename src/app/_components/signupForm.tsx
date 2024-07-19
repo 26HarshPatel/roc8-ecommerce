@@ -26,15 +26,11 @@ export default function SignupForm({
   const createUserMutation = api.user.create.useMutation({
     onSuccess: (data) => {
       console.log("User created successfully:", data);
-      // Handle successful response here
     },
     onError: (error) => {
       console.error("Error creating user:", error);
-      // Handle error response here
     },
   });
-  // const greeting = api.user.hello.useQuery();
-  // console.log("greeting = ", greeting.data);
 
   async function handleCreateNewUser() {
     return createUserMutation.mutate(userData);
@@ -50,7 +46,6 @@ export default function SignupForm({
     setUserData((prevVal: UserData) => {
       return { ...prevVal, [name]: e.target.value };
     });
-    // console.log("value =", e.target.value);
   }
 
   function handleRouter(path: string) {
@@ -62,12 +57,7 @@ export default function SignupForm({
     const emailTypeVerified = handleTypeValidateEmail(userData.email);
     if (emailTypeVerified) {
       await handleCreateNewUser();
-      // const newUser = await handleCreateNewUser();
-
-      // console.log("new user =", newUser);
       handleVerifyEmail();
-      // console.log("created user =", userData);
-      // console.log("creating user");
     } else {
       alert("Enter valid email.");
     }
